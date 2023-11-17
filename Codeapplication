@@ -1,0 +1,108 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+class Reminder {
+    private Date date;
+    private String message;
+
+    public Reminder(Date date, String message) {
+        this.date = date;
+        this.message = message;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}
+
+public class CalendarReminder {
+    private static final List<Reminder> reminders = new ArrayList<>();
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println("\nCalendar Reminder");
+            System.out.println("1. Add Reminder");
+            System.out.println("2. View Reminders");
+            System.out.println("3. Delete Reminder");
+            System.out.println("4. Exit");
+            System.out.print("Select an option (1-4): ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    addReminder();
+                    break;
+                case 2:
+                    viewReminders();
+                    break;
+                case 3:
+                    deleteReminder();
+                    break;
+                case 4:
+                    System.out.println("Exiting Calendar Reminder. Goodbye!");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 4.");
+            }
+        }
+    }
+
+    private static void addReminder() {
+        System.out.print("Enter the date (yyyy-MM-dd HH:mm:ss): ");
+        String dateString = scanner.nextLine();
+
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
+
+            System.out.print("Enter the reminder message: ");
+            String message = scanner.nextLine();
+
+            Reminder reminder = new Reminder(date, message);
+            reminders.add(reminder);
+
+            System.out.println("Reminder added successfully!");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format. Please use the format yyyy-MM-dd HH:mm:ss");
+        }
+    }
+
+    private static void viewReminders() {
+        if (reminders.isEmpty()) {
+            System.out.println("No reminders found.");
+        } else {
+            System.out.println("\nReminders:");
+            for (Reminder reminder : reminders) {
+                System.out.println("Date: " + reminder.getDate() + "\nMessage: " + reminder.getMessage() + "\n");
+            }
+        }
+    }
+
+    private static void deleteReminder() {
+        if (reminders.isEmpty()) {
+            System.out.println("No reminders to delete.");
+        } else {
+            viewReminders();
+            System.out.print("Enter the index of the reminder to delete: ");
+
+            int index = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            if (index >= 0 && index < reminders.size()) {
+                Reminder deletedReminder = reminders.remove(index);
+                System.out.println("Reminder deleted successfully:\n" +
+                        "Date: " + deletedReminder.getDate() + "\nMessage: " + deletedReminder.getMessage());
+            } else {
+                System.out.println("Invalid index. Please enter a valid index.");
+            }
+        }
+    }
+}
